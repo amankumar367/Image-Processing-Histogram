@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     boolean flag, isColored;
 
     private int SIZE = 256;
+
     // Red, Green, Blue
     private int NUMBER_OF_COLOURS = 3;
 
@@ -53,12 +54,6 @@ public class MainActivity extends AppCompatActivity {
     private int[][] colourBins;
     private volatile boolean loaded = false;
     private int maxY;
-
-    private static final int LDPI = 0;
-    private static final int MDPI = 1;
-    private static final int TVDPI = 2;
-    private static final int HDPI = 3;
-    private static final int XHDPI = 4;
 
     float offset = 1;
     @Override
@@ -117,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void openCamera() {
         mSelecterImage.setVisibility(View.GONE);
+        mImageHistogram.setVisibility(View.GONE);
         startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE), REQUEST_IMAGE_CAPTURE);
     }
 
@@ -197,7 +193,6 @@ public class MainActivity extends AppCompatActivity {
                 for (int y = 0; y < bi.getHeight(); y++) {
 
                     int pixel = bi.getPixel(x, y);
-
                     colourBins[RED][Color.red(pixel)]++;
                     colourBins[GREEN][Color.green(pixel)]++;
                     colourBins[BLUE][Color.blue(pixel)]++;
@@ -319,13 +314,7 @@ public class MainActivity extends AppCompatActivity {
                     for (int j = 0; j < SIZE - 1; j++) {
                         int value = (int) (((double) colourBins[i][j] / (double) maxY) * (getHeight()+100));
 
-
-                        //if(j==0) {
-                        //   wallpath.moveTo(j * xInterval* offset, getHeight() - value);
-                        //}
-                        // else {
                         wallpath.lineTo(j * xInterval * offset, getHeight() - value);
-                        // }
                     }
                     wallpath.lineTo(SIZE * offset, getHeight());
                     canvas.drawPath(wallpath, wallpaint);
@@ -339,7 +328,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected Dialog onCreateDialog(int id) {
         ProgressDialog dataLoadProgress = new ProgressDialog(this);
-        dataLoadProgress.setMessage("Loading...");
+        dataLoadProgress.setMessage("Loading Histogram...");
         dataLoadProgress.setIndeterminate(true);
         dataLoadProgress.setCancelable(false);
         dataLoadProgress.setProgressStyle(android.R.attr.progressBarStyleLarge);
